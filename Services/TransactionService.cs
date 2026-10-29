@@ -29,4 +29,13 @@ public class TransactionService : ITransactionService
             }
     };
     }
+
+    public List<Transaction> GetTransactionsPaged(int page, int pageSize)
+    {
+        return GetTransactions()
+        .OrderBy(t => t.Id)
+        .Skip((page - 1) * pageSize)
+        .Take(pageSize)
+        .ToList();
+    }
 }
