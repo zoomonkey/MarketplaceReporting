@@ -5,16 +5,16 @@ namespace MarketplaceReporting.Services;
 public class TransactionService : ITransactionService
 {
     public Transaction? GetTransactionById(int id)
-{
-    return GetTransactions()
-        .FirstOrDefault(t => t.Id == id);
-                                }
+    {
+        return GetTransactions()
+            .FirstOrDefault(t => t.Id == id);
+    }
     public List<Transaction> GetTransactions()
     {
         return new List<Transaction>
-        {
+                  {
             new()
-            {
+                {
                 Id = 1,
                 Date = new DateTime(2026, 9, 1),
                 Product = "Acrylic Display",
@@ -27,6 +27,6 @@ public class TransactionService : ITransactionService
                 Product = "LED Lamp",
                 Amount = 49.99m
             }
-        };
+    };
     }
 }
