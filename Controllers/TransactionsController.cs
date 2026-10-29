@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using MarketplaceReporting.Models;
+using MarketplaceReporting.Services;
 
 namespace MarketplaceReporting.Controllers;
 
@@ -7,27 +8,16 @@ namespace MarketplaceReporting.Controllers;
 [Route("api/[controller]")]
 public class TransactionsController : ControllerBase
 {
+    private readonly ITransactionService _service;
+
+    public TransactionsController(ITransactionService service)
+    {
+        _service = service;
+    }
+
     [HttpGet]
     public ActionResult<IEnumerable<Transaction>> Get()
     {
-        var transactions = new List<Transaction>
-        {
-            new()
-            {
-                Id = 1,
-                Date = new DateTime(2026, 9, 1),
-                Product = "Acrylic Display",
-                Amount = 29.99m
-            },
-            new()
-            {
-                Id = 2,
-                Date = new DateTime(2026, 9, 2),
-                Product = "LED Lamp",
-                Amount = 49.99m
-            }
-        };
-
-        return Ok(transactions);
+        return Ok(_service.GetTransactions());
     }
 }
