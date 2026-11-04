@@ -4,10 +4,6 @@ namespace MarketplaceReporting.Services;
 
 public interface ITransactionService
 {
-    List<Transaction> GetTransactions();
-
-    Transaction? GetTransactionById(int id);
-
-    List<Transaction> GetTransactionsPaged(int page, int pageSize);
+  
 }
 

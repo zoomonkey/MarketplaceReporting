@@ -1,41 +1,29 @@
+using Dapper;
+using Microsoft.Data.SqlClient;
 using MarketplaceReporting.Models;
 
 namespace MarketplaceReporting.Services;
 
-public class TransactionService : ITransactionService
+public class TransactionService
 {
-    public Transaction? GetTransactionById(int id)
+    private readonly string _connectionString;
+
+    public TransactionService(IConfiguration configuration)
     {
-        return GetTransactions()
-            .FirstOrDefault(t => t.Id == id);
-    }
-    public List<Transaction> GetTransactions()
-    {
-        return new List<Transaction>
-                  {
-            new()
-                {
-                Id = 1,
-                Date = new DateTime(2026, 9, 1),
-                Product = "Acrylic Display",
-                Amount = 29.99m
-            },
-            new()
-            {
-                Id = 2,
-                Date = new DateTime(2026, 9, 2),
-                Product = "LED Lamp",
-                Amount = 49.99m
-            }
-    };
+        _connectionString = configuration.GetConnectionString("DefaultConnection")
+            ?? throw new InvalidOperationException("Database connection string not found.");
     }
 
-    public List<Transaction> GetTransactionsPaged(int page, int pageSize)
+    public async Task<IEnumerable<ModelTransaction>> GetAllAsync()
     {
-        return GetTransactions()
-        .OrderBy(t => t.Id)
-        .Skip((page - 1) * pageSize)
-        .Take(pageSize)
-        .ToList();
+        using var connection = new SqlConnection(_connectionString);
+
+        const string sql = """
+            SELECT Id, Marketplace, OrderId, Amount, TransactionDate
+            FROM Transactions
+            ORDER BY TransactionDate DESC
+            """;
+
+        return await connection.QueryAsync<ModelTransaction>(sql);
     }
 }

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using MarketplaceReporting.Models;
 using MarketplaceReporting.Services;
+using MarketplaceReporting.Models;
 
 namespace MarketplaceReporting.Controllers;
 
@@ -8,30 +8,18 @@ namespace MarketplaceReporting.Controllers;
 [Route("api/[controller]")]
 public class TransactionsController : ControllerBase
 {
-    private readonly ITransactionService _service;
+    private readonly TransactionService _transactionService;
 
-    public TransactionsController(ITransactionService service)
+    public TransactionsController(TransactionService transactionService)
     {
-        _service = service;
+        _transactionService = transactionService;
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Transaction>> Get()
+    public async Task<ActionResult<IEnumerable<ModelTransaction>>> GetAll()
     {
-        return Ok(_service.GetTransactions());
-    }
-
-    [HttpGet("paged")]
-    public ActionResult<List<Transaction>> GetPaged(
-        int page = 1,
-        int pageSize = 10)
-    {
-        if (page < 1 || pageSize < 1)
-            return BadRequest("Page and pageSize must be positive.");
-
-        var transactions = _service.GetTransactionsPaged(page, pageSize);
+        var transactions = await _transactionService.GetAllAsync();
 
         return Ok(transactions);
     }
-
 }
