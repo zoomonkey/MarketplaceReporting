@@ -26,4 +26,20 @@ public class TransactionService
 
         return await connection.QueryAsync<ModelTransaction>(sql);
     }
+
+    public async Task<int> DeleteTransactionByIdAsync(int transactionId)
+    {
+        using var connection = new SqlConnection(_connectionString);
+
+        const string sql = """
+        DELETE FROM Transactions
+        WHERE Id = @TransactionId;
+        """;
+
+        return await connection.ExecuteAsync(
+            sql,
+            new { TransactionId = transactionId }
+        );
+    }
+
 }

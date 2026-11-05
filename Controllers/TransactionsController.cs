@@ -22,4 +22,18 @@ public class TransactionsController : ControllerBase
 
         return Ok(transactions);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteTransactionByIdAsync(int id)
+    {
+        int rowsAffected = await _transactionService.DeleteTransactionByIdAsync(id);
+
+        if (rowsAffected == 0)
+        {
+            return NotFound($"Transaction {id} was not found.");
+        }
+
+        return NoContent();
+    }
+
 }
